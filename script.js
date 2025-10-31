@@ -57,7 +57,7 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
       const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
 
-    fetch(`http://localhost:8080/product/${id}`)
+    fetch(`https://ims-backend-2sru.onrender.com/product/${id}`)
       .then(res => res.json())
       .then(p => {
         document.getElementById("id").value = p.id;
