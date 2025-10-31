@@ -1,0 +1,113 @@
+/* ===== Basic Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== Page Background ===== */
+body {
+  background: #e6f0ff; /* light blue background */
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+/* ===== Headings ===== */
+h1 {
+  color: #3e82ad;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 2px rgba(42, 91, 215, 0.2);
+}
+
+/* ===== Neumorphic Card ===== */
+.card {
+  background: #e6f0ff;
+  box-shadow: 10px 10px 20px #c5d5f5, -10px -10px 20px #ffffff;
+  border-radius: 20px;
+  padding: 30px 40px;
+  width: 350px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 5px 5px 10px #c5d5f5, -5px -5px 10px #ffffff;
+}
+
+/* ===== Input Fields ===== */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background: #e6f0ff;
+  box-shadow: inset 4px 4px 8px #c5d5f5, inset -4px -4px 8px #ffffff;
+  font-size: 15px;
+}
+
+input:focus {
+  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff, 0 0 4px #234db7;
+}
+
+/* ===== Buttons ===== */
+button {
+  background: #3e82ad;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px #c5d5f5, -4px -4px 8px #ffffff;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #503fbb;
+  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
+}
+
+/* ===== Product List ===== */
+#product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.product {
+  background: #e6f0ff;
+  box-shadow: 8px 8px 16px #c5d5f5, -8px -8px 16px #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  width: 220px;
+  text-align: center;
+}
+
+.product h3 {
+  color: #3e82ad;
+}
+
+.product p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+  .card {
+    width: 90%;
+  }
+
+  #product-list {
+    flex-direction: column;
+    align-items: center;
+  }
+}

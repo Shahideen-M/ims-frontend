@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Edit Product</h1>
+
+  <div class="card">
+    <form id="editProductForm">
+      <input type="hidden" id="id">
+
+      <label>Name:</label>
+      <input type="text" id="name" required>
+
+      <label>Price:</label>
+      <input type="number" id="price" required>
+
+      <label>Quantity:</label>
+      <input type="number" id="quantity" required>
+
+      <button type="submit">Update Product</button>
+      <button type="button" onclick="window.location.href='index.html'">Back</button>
+    </form>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    fetch(`http://localhost:8080/product/${id}`)
+      .then(res => res.json())
+      .then(p => {
+        document.getElementById("id").value = p.id;
+        document.getElementById("name").value = p.name;
+        document.getElementById("price").value = p.price;
+        document.getElementById("quantity").value = p.quantity;
+      });
+
+    document.getElementById("editProductForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const product = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        price: document.getElementById("price").value,
+        quantity: document.getElementById("quantity").value,
+      };
+
+      fetch(`http://localhost:8080/product/update/${product.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      })
+        .then(res => res.text())
+        .then(msg => {
+          alert("Product updated successfully!");
+          window.location.href = "index.html";
+        })
+        .catch(() => alert("Update failed"));
+    });
+  </script>
+</body>
+</html>
