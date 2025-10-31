@@ -23,7 +23,7 @@ function editProduct(id) {
 
 function deleteProduct(id) {
   if (confirm("Are you sure you want to delete this product?")) {
-    fetch(`http://localhost:8080/product/delete/${id}`, { method: "DELETE" })
+    fetch(`https://ims-backend-2sru.onrender.com/product/delete/${id}`, { method: "DELETE" })
       .then(() => {
         alert("Product deleted!");
         fetchProducts();
@@ -41,7 +41,7 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
         quantity: document.getElementById("quantity").value,
       };
 
-      fetch("http://localhost:8080/product/add", {
+      fetch("https://ims-backend-2sru.onrender.com/product/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product),
@@ -53,3 +53,38 @@ document.getElementById("addProductForm").addEventListener("submit", (e) => {
         })
         .catch(() => alert("Failed to add product"));
       });
+
+      const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+
+    fetch(`http://localhost:8080/product/${id}`)
+      .then(res => res.json())
+      .then(p => {
+        document.getElementById("id").value = p.id;
+        document.getElementById("name").value = p.name;
+        document.getElementById("price").value = p.price;
+        document.getElementById("quantity").value = p.quantity;
+      });
+
+    document.getElementById("editProductForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const product = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        price: document.getElementById("price").value,
+        quantity: document.getElementById("quantity").value,
+      };
+
+      fetch(`https://ims-backend-2sru.onrender.com/product/update/${product.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      })
+        .then(res => res.text())
+        .then(msg => {
+          alert("Product updated successfully!");
+          window.location.href = "index.html";
+        })
+        .catch(() => alert("Update failed"));
+    });
