@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", fetchProducts);
 
 function fetchProducts() {
-  fetch("http://localhost:8080/product/all")
+  fetch("https://ims-backend-2sru.onrender.com/product/all")
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("product-list");
