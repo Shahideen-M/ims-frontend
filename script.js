@@ -1,90 +1,101 @@
-document.addEventListener("DOMContentLoaded", fetchProducts);
+// const BASE_URL = "http://localhost:8080";
+const BASE_URL = "https://ims-backend-2sru.onrender.com";
 
-function fetchProducts() {
-  fetch("https://ims-backend-2sru.onrender.com/product/all")
-    .then(res => res.json())
-    .then(data => {
+// 🟡 Detect which page we’re on
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("product-list")) getAllProducts();
+  if (document.getElementById("addProductForm")) setupAddProduct();
+  if (document.getElementById("editProductForm")) loadAndEditProduct();
+});
+
+// 🟢 Fetch and show all products
+function getAllProducts() {
+  fetch(`${BASE_URL}/product/all`)
+    .then(r => r.json())
+    .then(d => {
       const list = document.getElementById("product-list");
-      list.innerHTML = data.map(p => `
+      list.innerHTML = d.map(p => `
         <div class="product">
-          <h3>${p.name}</h3>
-          <p>Price: ₹${p.price}</p>
+          <h3>${p.name || "Unnamed"}</h3>
+          <p>₹${p.price}</p>
           <p>Qty: ${p.quantity}</p>
-          <button onclick="editProduct(${p.id})">Edit</button>
-          <button onclick="deleteProduct(${p.id})">Delete</button>
+          <button onclick="edit(${p.productId})">Edit</button>
+          <button onclick="del(${p.productId})">Delete</button>
         </div>
       `).join("");
-    });
+    })
+    .catch(err => console.error("Error loading products:", err));
 }
 
-function editProduct(id) {
-  window.location.href = `editproduct.html?id=${id}`;
+// 🟠 Add product page
+function setupAddProduct() {
+  document.getElementById("addProductForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const p = {
+      name: document.getElementById("name").value,
+      price: document.getElementById("price").value,
+      quantity: document.getElementById("quantity").value
+    };
+    fetch(`${BASE_URL}/product/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(p)
+    })
+      .then(() => alert("✅ Product added!"))
+      .then(() => (location.href = "index.html"));
+  });
 }
 
-function deleteProduct(id) {
-  if (confirm("Are you sure you want to delete this product?")) {
-    fetch(`https://ims-backend-2sru.onrender.com/product/delete/${id}`, { method: "DELETE" })
-      .then(() => {
-        alert("Product deleted!");
-        fetchProducts();
-      });
+// 🔴 Delete product
+function del(id) {
+  if (confirm("Delete this product?")) {
+    fetch(`${BASE_URL}/product/delete/${id}`, { method: "DELETE" })
+      .then(() => alert("🗑️ Deleted!"))
+      .then(getAllProducts);
   }
 }
 
+// 🔵 Go to edit page
+function edit(id) {
+  location.href = `editproduct.html?id=${id}`;
+}
 
-document.getElementById("addProductForm").addEventListener("submit", (e) => {
-      e.preventDefault();
+// 🟣 Edit product (load + update)
+function loadAndEditProduct() {
+  const id = new URLSearchParams(window.location.search).get("id");
+  if (!id) return;
 
-      const product = {
-        name: document.getElementById("name").value,
-        price: document.getElementById("price").value,
-        quantity: document.getElementById("quantity").value,
-      };
-
-      fetch("https://ims-backend-2sru.onrender.com/product/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product),
-      })
-        .then(res => res.text())
-        .then(msg => {
-          alert("Product added successfully!");
-          window.location.href = "index.html";
-        })
-        .catch(() => alert("Failed to add product"));
-      });
-
-      const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-
-    fetch(`https://ims-backend-2sru.onrender.com/product/${id}`)
-      .then(res => res.json())
-      .then(p => {
-        document.getElementById("id").value = p.id;
-        document.getElementById("name").value = p.name;
-        document.getElementById("price").value = p.price;
-        document.getElementById("quantity").value = p.quantity;
-      });
-
-    document.getElementById("editProductForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const product = {
-        id: document.getElementById("id").value,
-        name: document.getElementById("name").value,
-        price: document.getElementById("price").value,
-        quantity: document.getElementById("quantity").value,
-      };
-
-      fetch(`https://ims-backend-2sru.onrender.com/product/update/${product.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product),
-      })
-        .then(res => res.text())
-        .then(msg => {
-          alert("Product updated successfully!");
-          window.location.href = "index.html";
-        })
-        .catch(() => alert("Update failed"));
+  fetch(`${BASE_URL}/product/${id}`)
+    .then(r => r.json())
+    .then(p => {
+      document.getElementById("id").value = p.productId;
+      document.getElementById("name").value = p.name;
+      document.getElementById("price").value = p.price;
+      document.getElementById("quantity").value = p.quantity;
     });
+
+  document.getElementById("editProductForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const p = {
+      productId: document.getElementById("id").value,
+      name: document.getElementById("name").value,
+      price: document.getElementById("price").value,
+      quantity: document.getElementById("quantity").value
+    };
+    fetch(`${BASE_URL}/product/update/${p.productId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(p)
+    })
+      .then(() => alert("✏️ Updated!"))
+      .then(() => (location.href = "index.html"));
+  });
+}
+
+document.getElementById("help").onclick = function() {
+  window.open("https://forms.gle/VfEhm6sQKwHqG1jr5");
+}
+
+document.getElementById("profile").onclick = function() {
+  alert("Profile is under construction!");
+}

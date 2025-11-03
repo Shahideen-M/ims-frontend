@@ -7,10 +7,14 @@
 </head>
 <body>
   <h1>Inventory Dashboard</h1>
+  <div class="help-profile">
+    <button id="help">💬</button>
+    <button id="profile">👤</button>
+  </div>
 
   <div class="card">
     <button onclick="window.location.href='addproduct.html'">Add Product</button>
-    <button onclick="fetchProducts()">Refresh List</button>
+    <button onclick="getAllProducts()">Refresh List</button>
   </div>
 
   <div id="product-list"></div>
