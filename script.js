@@ -10,9 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 🟢 Fetch and show all products
 function getAllProducts() {
+  showLoading(true);
   fetch(`${BASE_URL}/product/all`)
     .then(r => r.json())
     .then(d => {
+      showLoading(false);
       const list = document.getElementById("product-list");
       list.innerHTML = d.map(p => `
         <div class="product">
@@ -24,7 +26,10 @@ function getAllProducts() {
         </div>
       `).join("");
     })
-    .catch(err => console.error("Error loading products:", err));
+    .catch(err => {
+      showLoading(false);
+      console.error("Error loading products:", err);
+    }); 
 }
 
 // 🟠 Add product page
@@ -98,4 +103,9 @@ document.getElementById("help").onclick = function() {
 
 document.getElementById("profile").onclick = function() {
   alert("Profile is under construction!");
+
+}
+// Loading indicator
+function showLoading(isLoading) {
+  document.getElementById("loading").style.display = isLoading ? "block" : "none";
 }
