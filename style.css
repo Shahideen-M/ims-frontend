@@ -111,6 +111,9 @@ button:hover {
     align-items: center;
   }
 }
+.actions {
+  text-align: center;
+}
 
 /* ===== Help andButton ===== */
 .help-profile {
@@ -132,4 +135,8 @@ button:hover {
 }
 .help-profile button:hover {
   box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
+}
+/* Personal */
+.square{
+  font-size: 9px;
 }

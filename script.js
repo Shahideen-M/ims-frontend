@@ -1,111 +1,210 @@
-// const BASE_URL = "http://localhost:8080";
-const BASE_URL = "https://ims-backend-2sru.onrender.com";
+const BASE_URL = "http://localhost:8080";
+// const BASE_URL = "https://ims-backend-2sru.onrender.com";
 
-// 🟡 Detect which page we’re on
+
+// Get token & userId dynamically
+const getToken = () => localStorage.getItem("token");
+const getUserId = () => localStorage.getItem("userId");
+
+// 🟡 Detect page
 document.addEventListener("DOMContentLoaded", () => {
+  if (document.getElementById("loginForm")) loginUser();
+  if (document.getElementById("registerForm")) registerUser();
   if (document.getElementById("product-list")) getAllProducts();
   if (document.getElementById("addProductForm")) setupAddProduct();
   if (document.getElementById("editProductForm")) loadAndEditProduct();
 });
 
-// 🟢 Fetch and show all products
-function getAllProducts() {
-  showLoading(true);
-  fetch(`${BASE_URL}/product/all`)
-    .then(r => r.json())
-    .then(d => {
-      showLoading(false);
-      const list = document.getElementById("product-list");
-      list.innerHTML = d.map(p => `
-        <div class="product">
-          <h3>${p.name || "Unnamed"}</h3>
-          <p>₹${p.price}</p>
-          <p>Qty: ${p.quantity}</p>
-          <button onclick="edit(${p.productId})">Edit</button>
-          <button onclick="del(${p.productId})">Delete</button>
-        </div>
-      `).join("");
+// ------------------------------
+// LOGIN
+// ------------------------------
+function loginUser() {
+  document.getElementById("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const creds = {
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    };
+    showLoading(true);
+    fetch(`${BASE_URL}/user/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(creds)
     })
-    .catch(err => {
-      showLoading(false);
-      console.error("Error loading products:", err);
-    }); 
+    .then(res => res.json())
+    .then(data => {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.id);
+      alert("✅ Login successful!");
+      window.location.href = "dashboard.html";
+    })
+    .finally(() => showLoading(false))
+    .catch(err => console.error("Login error:", err));
+  });
 }
 
-// 🟠 Add product page
+// ------------------------------
+// REGISTER
+// ------------------------------
+function registerUser() {
+  document.getElementById("registerForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const user = {
+      username: document.getElementById("username").value,
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    };
+    showLoading(true);
+    fetch(`${BASE_URL}/user/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user)
+    })
+    .then(async res => {
+      if (res.ok) {
+        alert("✅ Registration successful!");
+        window.location.href = "/index.html";
+      } else {
+        const errText = await res.text();
+        showLoading(false);
+        alert("❌ Registration failed: " + errText);
+      }
+    })
+  });
+}
+
+// ------------------------------
+// GET ALL PRODUCTS
+// ------------------------------
+function getAllProducts() {
+  showLoading(true);
+  fetch(`${BASE_URL}/product/all/${getUserId()}`, {
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
+  .then(res => res.json())
+  .then(data => {
+    showLoading(false);
+    const list = document.getElementById("product-list");
+    list.innerHTML = data.map(p => `
+      <div class="product">
+        <h3>${p.name || "Unnamed"}</h3>
+        <p>₹${p.price}</p>
+        <p>Qty: ${p.quantity}</p>
+        <button onclick="edit(${p.id})">Edit</button>
+        <button onclick="del(${p.id})">Delete</button>
+      </div>
+    `).join("");
+  })
+  .catch(err => {
+    showLoading(false);
+    console.error("Error loading products:", err);
+  });
+}
+
+// ------------------------------
+// ADD PRODUCT
+// ------------------------------
 function setupAddProduct() {
   document.getElementById("addProductForm").addEventListener("submit", e => {
     e.preventDefault();
-    const p = {
+    const product = {
       name: document.getElementById("name").value,
       price: document.getElementById("price").value,
       quantity: document.getElementById("quantity").value
     };
-    fetch(`${BASE_URL}/product/add`, {
+    fetch(`${BASE_URL}/product/add/${getUserId()}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(p)
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
     })
-      .then(() => alert("✅ Product added!"))
-      .then(() => (location.href = "index.html"));
+    .then(() => {
+      alert("✅ Product added!");
+      window.location.href = "dashboard.html";
+    })
+    .catch(err => console.error(err));
   });
 }
 
-// 🔴 Delete product
+// ------------------------------
+// DELETE PRODUCT
+// ------------------------------
 function del(id) {
-  if (confirm("Delete this product?")) {
-    fetch(`${BASE_URL}/product/delete/${id}`, { method: "DELETE" })
-      .then(() => alert("🗑️ Deleted!"))
-      .then(getAllProducts);
-  }
+  if (!confirm("Delete this product?")) return;
+  fetch(`${BASE_URL}/product/delete/${getUserId()}/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
+  .then(() => {
+    alert("🗑️ Deleted!");
+    getAllProducts();
+  })
+  .catch(err => console.error(err));
 }
 
-// 🔵 Go to edit page
+// ------------------------------
+// EDIT PRODUCT
+// ------------------------------
 function edit(id) {
-  location.href = `editproduct.html?id=${id}`;
+  window.location.href = `editproduct.html?id=${id}`;
 }
 
-// 🟣 Edit product (load + update)
 function loadAndEditProduct() {
   const id = new URLSearchParams(window.location.search).get("id");
   if (!id) return;
 
-  fetch(`${BASE_URL}/product/${id}`)
-    .then(r => r.json())
-    .then(p => {
-      document.getElementById("id").value = p.productId;
-      document.getElementById("name").value = p.name;
-      document.getElementById("price").value = p.price;
-      document.getElementById("quantity").value = p.quantity;
-    });
+  fetch(`${BASE_URL}/product/${id}`, {
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
+  .then(res => res.json())
+  .then(p => {
+    document.getElementById("id").value = p.id;
+    document.getElementById("name").value = p.name;
+    document.getElementById("price").value = p.price;
+    document.getElementById("quantity").value = p.quantity;
+  })
+  .catch(err => console.error(err));
 
   document.getElementById("editProductForm").addEventListener("submit", e => {
     e.preventDefault();
-    const p = {
+    const product = {
       productId: document.getElementById("id").value,
       name: document.getElementById("name").value,
       price: document.getElementById("price").value,
       quantity: document.getElementById("quantity").value
     };
-    fetch(`${BASE_URL}/product/update/${p.productId}`, {
+    fetch(`${BASE_URL}/product/update/${getUserId()}/${product.productId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(p)
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(product)
     })
-      .then(() => alert("✏️ Updated!"))
-      .then(() => (location.href = "index.html"));
+    .then(() => {
+      alert("✏️ Updated!");
+      window.location.href = "dashboard.html";
+    })
+    .catch(err => console.error(err));
   });
 }
 
-document.getElementById("help").onclick = function() {
+// ------------------------------
+// LOADING INDICATOR
+// ------------------------------
+function showLoading(show) {
+  const loader = document.getElementById("loading");
+  if (loader) loader.style.display = show ? "block" : "none";
+}
+
+// ------------------------------
+// HELP & PROFILE
+// ------------------------------
+document.getElementById("help")?.addEventListener("click", () => {
   window.open("https://forms.gle/VfEhm6sQKwHqG1jr5");
-}
-
-document.getElementById("profile").onclick = function() {
+});
+document.getElementById("profile")?.addEventListener("click", () => {
   alert("Profile is under construction!");
-
-}
-// Loading indicator
-function showLoading(isLoading) {
-  document.getElementById("loading").style.display = isLoading ? "block" : "none";
-}
+});
