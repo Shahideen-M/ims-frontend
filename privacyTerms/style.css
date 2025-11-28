@@ -1,0 +1,36 @@
+.termsPrivacy {
+            /* max-width: 900px; */
+            margin: auto;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            align-items: flex-start;
+
+}
+
+.termsPrivacy h2 {
+    text-align: center;
+    color: #2f6b91;
+    margin-bottom: 20px;
+}
+.termsPrivacy h3 {
+    color: #2f6b91;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+.termsPrivacy p {
+    margin-bottom: 15px;
+    color: #333;
+}
+.termsPrivacy ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+body {
+  background: #e6f0ff; /* light blue background */
+  color: #333;
+  flex-direction: column;
+  padding: 20px;
+}
