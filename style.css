@@ -136,6 +136,17 @@ button:hover {
 .help-profile button:hover {
   box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
 }
+
+.termsPrivacy {
+            /* max-width: 900px; */
+            margin: auto;
+            padding: 40px;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            align-items: flex-start;
+
+}
+
 /* Personal */
 .square{
   font-size: 9px;
