@@ -141,3 +141,9 @@ button:hover {
 .square{
   font-size: 9px;
 }
+
+/* Profile Page */
+#userDetails {
+  font-size: 20px;
+  line-height: 1.6;
+}

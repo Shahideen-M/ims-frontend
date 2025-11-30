@@ -1,5 +1,5 @@
-// const BASE_URL = "http://localhost:8080";
-const BASE_URL = "https://ims-backend-2sru.onrender.com";
+const BASE_URL = "http://localhost:8080";
+// const BASE_URL = "https://ims-backend-2sru.onrender.com";
 
 
 // Get token & userId dynamically
@@ -8,11 +8,17 @@ const getUserId = () => localStorage.getItem("userId");
 
 // 🟡 Detect page
 document.addEventListener("DOMContentLoaded", () => {
+  const token = getToken();
+  if (token && (location.pathname.endsWith("/") || location.pathname.endsWith("index.html"))) {
+  window.location.href = "dashboard.html";
+}
+
   if (document.getElementById("loginForm")) loginUser();
   if (document.getElementById("registerForm")) registerUser();
   if (document.getElementById("product-list")) getAllProducts();
   if (document.getElementById("addProductForm")) setupAddProduct();
   if (document.getElementById("editProductForm")) loadAndEditProduct();
+  if (document.getElementById("userDetails")) userProfile();
 });
 
 // ------------------------------
@@ -202,9 +208,36 @@ function showLoading(show) {
 // ------------------------------
 // HELP & PROFILE
 // ------------------------------
-document.getElementById("help")?.addEventListener("click", () => {
+document.getElementById("help").addEventListener("click", () => {
   window.open("https://forms.gle/VfEhm6sQKwHqG1jr5");
 });
-document.getElementById("profile")?.addEventListener("click", () => {
-  alert("Profile is under construction!");
+document.getElementById("profile").addEventListener("click", () => {
+  window.location.href = "profile.html";
 });
+
+// profile page
+function userProfile() {
+  fetch(`${BASE_URL}/user/me`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${getToken()}` }
+  })
+  .then(res => res.json())
+  .then(user => {
+    document.getElementById("profileUsername").innerText = user.username;
+    document.getElementById("profileEmail").innerText = user.email;
+    document.getElementById("profileProducts").innerText = user.products.length;
+  })
+  .catch(err => console.error("Error loading profile:", err));
+}
+function logout() {
+  if (confirm("Are you sure you want to logout?")) {
+    console.log("Logging out...");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    alert("✅ Logged out!");
+    window.location.href = "index.html";
+  }
+}
+// ------------------------------
+// END OF FILE
+// ------------------------------
