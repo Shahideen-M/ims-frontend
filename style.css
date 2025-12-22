@@ -8,96 +8,122 @@
 
 /* ===== Page Background ===== */
 body {
-  background: #e6f0ff; /* light blue background */
-  color: #333;
+  background: #ffffff; /* main background */
+  color: #2f6b91;     /* text color */
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
   padding: 40px;
 }
 
 /* ===== Headings ===== */
-h1 {
+h1, h2, h3, h4, h5, h6 {
   color: #2f6b91;
-  margin-bottom: 25px;
   text-shadow: 1px 1px 2px rgba(42, 91, 215, 0.2);
 }
 
-/* ===== Neumorphic Card ===== */
-.card {
-  background: #e6f0ff;
-  box-shadow: 10px 10px 20px #c5d5f5, -10px -10px 20px #ffffff;
-  border-radius: 20px;
-  padding: 30px 40px;
-  width: 350px;
-  transition: 0.3s;
+/* ===== Navbar ===== */
+.navbar {
+  background: #ffffff;
+  box-shadow: 5px 5px 15px #c5d5f5, -5px -5px 15px #ffffff;
+  border-radius: 15px;
+  padding: 10px 20px;
+}
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: #2f6b91;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.navbar .nav-link:hover {
+  color: #497abe;
+  text-decoration: underline;
 }
 
+/* ===== Buttons ===== */
+.btn {
+  background: #2f6b91;
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 15px;
+  box-shadow: 4px 4px 8px #c5d5f5, -4px -4px 8px #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn:hover {
+  background: #497abe;
+  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
+}
+
+/* ===== Cards ===== */
+.card {
+  background: #ffffff;
+  box-shadow: 10px 10px 20px #c5d5f5, -10px -10px 20px #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  transition: 0.3s;
+}
 .card:hover {
   box-shadow: 5px 5px 10px #c5d5f5, -5px -5px 10px #ffffff;
 }
 
-/* ===== Input Fields ===== */
-input {
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 8px 8px 16px #c5d5f5, -8px -8px 16px #ffffff;
+  overflow: hidden;
+}
+th, td {
+  padding: 10px 15px;
+  text-align: center;
+  border: none;
+}
+thead th {
+  background: #e6f0ff;
+  color: #2f6b91;
+  font-weight: 500;
+}
+tbody tr:hover {
+  background: #f0f5ff;
+}
+
+/* ===== Inputs ===== */
+input, select, textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
   border: none;
   border-radius: 10px;
   outline: none;
-  background: #e6f0ff;
+  background: #ffffff;
   box-shadow: inset 4px 4px 8px #c5d5f5, inset -4px -4px 8px #ffffff;
   font-size: 15px;
 }
-
-input:focus {
-  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff, 0 0 4px #234db7;
+input:focus, select:focus, textarea:focus {
+  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff, 0 0 4px #2f6b91;
 }
 
-/* ===== Buttons ===== */
-button {
-  background: rgb(57, 155, 194);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  margin-top: 10px;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 4px 4px 8px #c5d5f5, -4px -4px 8px #ffffff;
-  transition: 0.2s;
+/* ===== Modal ===== */
+.modal-content {
+  background: #ffffff;
+  box-shadow: 10px 10px 20px #c5d5f5, -10px -10px 20px #ffffff;
+  border-radius: 15px;
 }
 
-button:hover {
-  background: #497abe;
-  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
-}
-
-/* ===== Product List ===== */
-#product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.product {
-  background: #e6f0ff;
-  box-shadow: 8px 8px 16px #c5d5f5, -8px -8px 16px #ffffff;
-  border-radius: 20px;
-  padding: 20px;
-  width: 220px;
+/* ===== Footer ===== */
+footer {
+  color: #2f6b91;
+  font-weight: 500;
   text-align: center;
-}
-
-.product h3 {
-  color: #3e82ad;
-}
-
-.product p {
-  font-size: 14px;
-  margin: 5px 0;
+  margin-top: auto;
+  padding: 15px 0;
 }
 
 /* ===== Responsive ===== */
@@ -105,45 +131,8 @@ button:hover {
   .card {
     width: 90%;
   }
-
   #product-list {
     flex-direction: column;
     align-items: center;
   }
-}
-.actions {
-  text-align: center;
-}
-
-/* ===== Help andButton ===== */
-.help-profile {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: 10px;
-  cursor: pointer;
-}
-.help-profile button {
-  background: #e6f0ff;
-  border: none;
-  font-size: 20px;
-  padding: 10px;
-  border-radius: 50%;
-  box-shadow: 4px 4px 8px #c5d5f5, -4px -4px 8px #ffffff;
-  transition: 0.2s;
-}
-.help-profile button:hover {
-  box-shadow: inset 3px 3px 6px #c5d5f5, inset -3px -3px 6px #ffffff;
-}
-
-/* Personal */
-.square{
-  font-size: 9px;
-}
-
-/* Profile Page */
-#userDetails {
-  font-size: 20px;
-  line-height: 1.6;
 }

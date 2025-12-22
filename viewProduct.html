@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-3">
+
+  <h3 class="text-center mb-3">Product Details</h3>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="products.html">Products</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="card shadow">
+      <div class="card-body">
+
+        <h4 id="productName" class="mb-3"></h4>
+
+        <p><strong>Price:</strong> ₹<span id="price"></span></p>
+        <p><strong>Quantity:</strong> <span id="quantity"></span></p>
+        <p><strong>Status:</strong> <span id="status"></span></p>
+
+        <hr>
+
+        <p><strong>Category:</strong> <span id="category"></span></p>
+        <p><strong>Sub-Category:</strong> <span id="subCategory"></span></p>
+
+        <hr>
+
+        <p><strong>Description:</strong></p>
+        <p id="description"></p>
+
+        <p><strong>Shop Address:</strong></p>
+        <p id="shopAddress"></p>
+
+        <div class="d-flex gap-2 mt-4">
+          <a id="editBtn" class="btn btn-warning">Edit</a>
+          <button id="deleteBtn" class="btn btn-danger">Delete</button>
+          <a href="products.html" class="btn btn-secondary">Back</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="loader" class="position-fixed top-50 start-50 translate-middle d-none">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <div id="alertToast" class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast" class="toast align-items-center border-0">
+      <div class="toast-body"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/viewProduct.js"></script>
+
+</body>
+</html>
