@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           quantity: quantityInput.value,
           description: descriptionInput.value || "",
           shopAddress: shopAddressInput.value || "",
-          subCategoryId: subcategorySelect.value
+          subCategory: {id: subcategorySelect.value}
         })
       });
 
